@@ -17,16 +17,24 @@ jobs:
         with:
           xcode-version: "15.2"
 
+      - name: Xcode version
+        run: xcodebuild -version
+
+      - name: List simulators
+        run: xcrun simctl list devices available
+
       - name: Build and test
         run: |
           set -o pipefail
           xcodebuild \
             -project StarterApp.xcodeproj \
             -scheme StarterApp \
-            -destination 'platform=iOS Simulator,name=iPhone 15' \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
             -sdk iphonesimulator \
             -configuration Debug \
             -resultBundlePath TestResults.xcresult \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY="" \
             clean test
 
       - name: Upload test results
